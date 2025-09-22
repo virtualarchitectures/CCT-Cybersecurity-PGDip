@@ -1,0 +1,7 @@
+[project]
+name = "cct-cybersecurity-pgdip"
+version = "0.1.0"
+description = "Coursework for the PGDip in Cybersecurity at CCT Dublin."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
