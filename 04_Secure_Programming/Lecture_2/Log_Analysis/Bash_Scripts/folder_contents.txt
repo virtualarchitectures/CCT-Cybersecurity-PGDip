@@ -1,0 +1,11 @@
+total 40
+-rw-rw-r-- 1 kali kali  185 Oct  5 09:09 contents_to_file.sh
+-rw-rw-r-- 1 kali kali  114 Oct  5 09:02 count_lines.sh
+-rw-rw-r-- 1 kali kali  183 Oct  5 09:01 extract_ip.sh
+-rw-rw-r-- 1 kali kali  105 Oct  5 09:03 extract_sorted.sh
+-rw-rw-r-- 1 kali kali  186 Oct  5 09:06 extract_usernames.sh
+-rw-rw-r-- 1 kali kali    0 Oct  5 09:10 folder_contents.txt
+-rw-rw-r-- 1 kali kali 1433 Oct  2 12:30 log_auth.txt
+-rw-rw-r-- 1 kali kali 4485 Oct  2 12:20 logfile.txt
+-rwxrw-rw- 1 kali kali  624 Sep 26 07:35 sample.log
+-rw-rw-r-- 1 kali kali  422 Oct  5 09:07 usernames.txt
