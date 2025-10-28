@@ -10,3 +10,8 @@ dependencies = [
     "python-nmap>=0.7.1",
     "requests>=2.32.5",
 ]
+
+[dependency-groups]
+dev = [
+    "ipykernel>=7.1.0",
+]
