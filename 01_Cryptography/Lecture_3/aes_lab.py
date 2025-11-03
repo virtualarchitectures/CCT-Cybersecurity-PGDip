@@ -719,6 +719,8 @@ def print_matrix(matrix, title="Matrix"):
 
 def aes_encryption(plaintext, main_key, num_rounds=10):
     """Perform complete AES encryption with multiple rounds"""
+    print(f"\nPlaintext Input: '{plaintext}'")
+
     state = text_to_hex_matrix(plaintext)
     print_matrix(state, "Initial State")
 
@@ -743,17 +745,27 @@ def aes_encryption(plaintext, main_key, num_rounds=10):
         state = shift_rows(state)
         print_matrix(state, "After ShiftRows")
 
-        # In the final round, MixColumns is omitted in the standard AES
+        # NOTE: MixColumns is omitted in the final round of standard AES
 
         # Apply AddRoundKey
         state = add_round_key(state, round_key)
         print_matrix(state, "After AddRoundKey")
 
-    return state
+    # Display the encrypted matrix
+    print("\n=== Encrypted Result ===")
+    print_matrix(state, "Encrypted State Matrix")
+    # Convert the state matrix to text
+    ciphertext = hex_matrix_to_text(state)
+
+    return ciphertext
 
 
-def aes_decryption(ciphertext_matrix, main_key, num_rounds=10):
+def aes_decryption(ciphertext, main_key, num_rounds=10):
     """Perform complete AES decryption with multiple rounds"""
+    print(f"\nCiphertext Input: '{ciphertext}'")
+
+    # Convert the ciphertext to a matrix
+    ciphertext_matrix = text_to_hex_matrix(ciphertext)
 
     state = ciphertext_matrix
     print_matrix(state, "Initial Ciphertext Matrix")
@@ -783,13 +795,19 @@ def aes_decryption(ciphertext_matrix, main_key, num_rounds=10):
         state = add_round_key(state, round_key)
         print_matrix(state, "After AddRoundKey")
 
-    return state
+    # Display the decrypted result
+    print("\n=== Decrypted Result ===")
+    print_matrix(state, "Decrypted State Matrix")
+    # Convert the state matrix to text
+    plaintext = hex_matrix_to_text(state)
+
+    return plaintext
 
 
 if __name__ == "__main__":
 
-    plaintext = "HELLO WORLD!!!!!"  # Exactly 16 characters
-    # plaintext = "ABCDEFGHIJKLMNOP"
+    # plaintext = "HELLO WORLD!!!!!"  # Exactly 16 characters
+    plaintext = "ABCDEFGHIJKLMNOP"
 
     round_key = [
         [0x2B, 0x28, 0xAB, 0x09],
@@ -800,24 +818,10 @@ if __name__ == "__main__":
 
     num_rounds = 10
 
-    print("=== AES Round Encryption ===")
-    print(f"\nPlaintext: '{plaintext}'")
-
-    encrypted_matrix = aes_encryption(plaintext, round_key, num_rounds)
-    # Display the encrypted matrix
-    print("\n=== Encrypted Result ===")
-    print_matrix(encrypted_matrix, "Final Encrypted Matrix")
-    # Display the ciphertext
-    ciphertext = hex_matrix_to_text(encrypted_matrix)
-    print(f"\nEncrypted Ciphertext: '{ciphertext}'")
-
-    print("=== AES Round Decryption ===")
+    print("=== AES Encryption ===")
+    ciphertext = aes_encryption(plaintext, round_key, num_rounds)
     print(f"\nCiphertext: '{ciphertext}'")
 
-    decrypted_matrix = aes_decryption(encrypted_matrix, round_key, num_rounds)
-    # Display the decrypted result
-    print("\n=== Encrypted Result ===")
-    print_matrix(decrypted_matrix, "Final Decrypted Matrix")
-    # Step 4: Convert matrix to text
-    plaintext = hex_matrix_to_text(decrypted_matrix)
-    print(f"\nDecrypted plaintext: {plaintext}")
+    print("=== AES Decryption ===")
+    decrypted_plaintext = aes_decryption(ciphertext, round_key, num_rounds)
+    print(f"\nDecrypted plaintext: {decrypted_plaintext}")
