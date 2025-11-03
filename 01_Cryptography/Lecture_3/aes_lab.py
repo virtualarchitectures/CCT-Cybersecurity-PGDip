@@ -717,40 +717,71 @@ def print_matrix(matrix, title="Matrix"):
         print([f"{byte:02x}" for byte in row])
 
 
-def aes_encrypt_round(plaintext, round_key):
-    """Perform one complete AES encryption round"""
-    # Step 1: Convert text to matrix
+def aes_encryption(plaintext, main_key, num_rounds=10):
+    """Perform complete AES encryption with multiple rounds"""
     state = text_to_hex_matrix(plaintext)
     print_matrix(state, "Initial State")
 
-    # Step 2: Apply SubBytes
-    state = sub_bytes(state)
-    print_matrix(state, "After SubBytes")
+    # Initial AddRoundKey
+    state = add_round_key(state, main_key)
+    print_matrix(state, "After Initial AddRoundKey")
 
-    # Step 3: Apply ShiftRows
-    state = shift_rows(state)
-    print_matrix(state, "After ShiftRows")
+    # Main AES Rounds
+    for round in range(1, num_rounds + 1):
+        print(f"\n== Round {round} ==")
 
-    # Step 4: Apply AddRoundKey
-    state = add_round_key(state, round_key)
-    print_matrix(state, "After AddRoundKey")
+        # Generate or retrieve proper round key for each round (using main_key here)
+        round_key = (
+            main_key  # Replace with the appropriate key schedule logic for real use
+        )
+
+        # Apply SubBytes
+        state = sub_bytes(state)
+        print_matrix(state, "After SubBytes")
+
+        # Apply ShiftRows
+        state = shift_rows(state)
+        print_matrix(state, "After ShiftRows")
+
+        # In the final round, MixColumns is omitted in the standard AES
+
+        # Apply AddRoundKey
+        state = add_round_key(state, round_key)
+        print_matrix(state, "After AddRoundKey")
 
     return state
 
 
-def aes_decrypt_round(ciphertext_matrix, round_key):
-    """Perform one complete AES decryption round"""
-    # Step 1: Apply Inverse AddRoundKey
-    state = add_round_key(ciphertext_matrix, round_key)
-    print_matrix(state, "After Inverse AddRoundKey")
+def aes_decryption(ciphertext_matrix, main_key, num_rounds=10):
+    """Perform complete AES decryption with multiple rounds"""
 
-    # Step 2: Apply Inverse ShiftRows
-    state = inverse_shift_rows(state)
-    print_matrix(state, "After Inverse ShiftRows")
+    state = ciphertext_matrix
+    print_matrix(state, "Initial Ciphertext Matrix")
 
-    # Step 3: Apply Inverse SubBytes
-    state = inverse_sub_bytes(state)
-    print_matrix(state, "After Inverse SubBytes")
+    # Initial AddRoundKey with the final round key
+    state = add_round_key(state, main_key)
+    print_matrix(state, "After Initial AddRoundKey")
+
+    # Main AES Rounds (in reverse order)
+    for round in range(num_rounds, 0, -1):
+        print(f"\n== Round {round} ==")
+
+        # Generate or retrieve proper round key for each round (using main_key here)
+        round_key = (
+            main_key  # Replace with the appropriate key schedule logic for real use
+        )
+
+        # Apply Inverse ShiftRows
+        state = inverse_shift_rows(state)
+        print_matrix(state, "After Inverse ShiftRows")
+
+        # Apply Inverse SubBytes
+        state = inverse_sub_bytes(state)
+        print_matrix(state, "After Inverse SubBytes")
+
+        # Apply AddRoundKey
+        state = add_round_key(state, round_key)
+        print_matrix(state, "After AddRoundKey")
 
     return state
 
@@ -767,24 +798,26 @@ if __name__ == "__main__":
         [0x16, 0xA6, 0x88, 0x3C],
     ]
 
+    num_rounds = 10
+
     print("=== AES Round Encryption ===")
     print(f"\nPlaintext: '{plaintext}'")
 
-    encrypted_result = aes_encrypt_round(plaintext, round_key)
+    encrypted_matrix = aes_encryption(plaintext, round_key, num_rounds)
     # Display the encrypted matrix
     print("\n=== Encrypted Result ===")
-    print_matrix(encrypted_result, "Final Encrypted Matrix")
+    print_matrix(encrypted_matrix, "Final Encrypted Matrix")
     # Display the ciphertext
-    ciphertext = hex_matrix_to_text(encrypted_result)
+    ciphertext = hex_matrix_to_text(encrypted_matrix)
     print(f"\nEncrypted Ciphertext: '{ciphertext}'")
 
     print("=== AES Round Decryption ===")
     print(f"\nCiphertext: '{ciphertext}'")
 
-    decrypted_result = aes_decrypt_round(encrypted_result, round_key)
+    decrypted_matrix = aes_decryption(encrypted_matrix, round_key, num_rounds)
     # Display the decrypted result
     print("\n=== Encrypted Result ===")
-    print_matrix(decrypted_result, "Final Decrypted Matrix")
+    print_matrix(decrypted_matrix, "Final Decrypted Matrix")
     # Step 4: Convert matrix to text
-    plaintext = hex_matrix_to_text(decrypted_result)
+    plaintext = hex_matrix_to_text(decrypted_matrix)
     print(f"\nDecrypted plaintext: {plaintext}")
